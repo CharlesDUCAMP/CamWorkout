@@ -23,7 +23,8 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);}
 #app{display:flex;flex-direction:column;height:100%;}
 #topbar{position:fixed;top:0;left:0;right:0;z-index:200;padding-top:var(--safe-top);background:rgba(13,15,20,0.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:calc(var(--safe-top) + 56px);display:flex;align-items:flex-end;padding-bottom:10px;padding-left:18px;padding-right:18px;justify-content:space-between;}
-#topbar h1{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#topbar h1{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent; display: flex; align-items: center; gap: 10px;}
+#btn-logout { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.3); color: var(--red); padding: 4px 10px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer;}
 #install-banner{position:fixed;z-index:150;left:0;right:0;top:calc(var(--safe-top) + 56px);background:linear-gradient(135deg,rgba(240,165,0,0.12),rgba(224,92,42,0.08));border-bottom:1px solid rgba(240,165,0,0.25);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:0.8rem;}
 #install-banner strong{color:var(--a1);}
 #install-banner button{margin-left:auto;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 6px;}
@@ -65,7 +66,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',
 .add-title{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:2px;color:var(--green);margin-bottom:14px;}
 .form-label{font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;display:block;}
 .form-group{margin-bottom:14px;}
-select,input[type=text],input[type=password],input[type=number]{background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;padding:12px 14px;width:100%;-webkit-appearance:none;}
+select,input[type=email],input[type=password],input[type=number]{background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;padding:12px 14px;width:100%;-webkit-appearance:none;}
 select:focus,input:focus{outline:none;border-color:var(--a1);}
 .ref-banner{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;}
 .ref-top{display:flex;gap:10px;margin-bottom:12px;}
@@ -109,10 +110,13 @@ select:focus,input:focus{outline:none;border-color:var(--a1);}
 #login-screen h1 {
     font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; letter-spacing: 3px;
     background: linear-gradient(135deg, var(--a1), var(--a2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px;
 }
 #login-box { width: 100%; max-width: 320px; }
-#login-error { color: var(--red); font-size: 0.85rem; text-align: center; margin-top: 15px; display: none; font-weight: 600;}
+#login-error { color: var(--red); font-size: 0.85rem; text-align: center; margin-top: 15px; display: none; font-weight: 600; padding: 10px; background: rgba(231,76,60,0.1); border-radius: 8px;}
+#login-success { color: var(--green); font-size: 0.85rem; text-align: center; margin-top: 15px; display: none; font-weight: 600; padding: 10px; background: rgba(46,204,113,0.1); border-radius: 8px;}
+.btn-secondary { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 2px; cursor: pointer; margin-top: 10px; }
+.btn-secondary:active { background: var(--card); }
 </style>
 </head>
 <body>
@@ -121,21 +125,24 @@ select:focus,input:focus{outline:none;border-color:var(--a1);}
     <h1>💪 MonSport</h1>
     <div id="login-box">
         <div class="form-group">
-            <label class="form-label">Utilisateur</label>
-            <input type="text" id="login-user" placeholder="Nom d'utilisateur" autocapitalize="none">
+            <label class="form-label">Adresse E-mail</label>
+            <input type="email" id="login-email" placeholder="camille@monsport.com" autocapitalize="none">
         </div>
         <div class="form-group" style="margin-bottom: 25px;">
             <label class="form-label">Mot de passe</label>
             <input type="password" id="login-pass" placeholder="••••••••">
         </div>
-        <button class="btn-save" style="margin-top:0;" onclick="attemptLogin()">SE CONNECTER</button>
-        <div id="login-error">Identifiants incorrects.</div>
+        <button class="btn-save" style="margin-top:0;" onclick="loginWithFirebase()">SE CONNECTER</button>
+        <button class="btn-secondary" onclick="registerWithFirebase()">CRÉER MON COMPTE</button>
+        
+        <div id="login-error"></div>
+        <div id="login-success"></div>
     </div>
 </div>
 
 <div id="app" style="display:none;">
 <div id="topbar">
-<h1>💪 MonSport</h1>
+<h1>💪 MonSport <button id="btn-logout" onclick="logoutFirebase()">Quitter</button></h1>
 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
 <span id="topbar-sub" style="font-size:0.72rem;color:var(--muted);">Bas du Corps</span>
 <span id="sync-badge" style="font-size:0.68rem;color:var(--muted);">💾 local</span>
@@ -207,6 +214,7 @@ select:focus,input:focus{outline:none;border-color:var(--a1);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
@@ -219,18 +227,23 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const userDoc = doc(db, "sports_data", "CamilleLPX");
+const auth = getAuth(app);
+let userDoc = null; 
 
 const DEFAULT={jambes:{label:"Bas du Corps",color:"#f0a500",exercises:{"Squat":[[{reps:10,kg:70},{reps:10,kg:80},{reps:10,kg:85}],[{reps:10,kg:75},{reps:10,kg:90},{reps:10,kg:100}]],"Leg Press":[[{reps:15,kg:52},{reps:15,kg:61},{reps:18,kg:63}],[{reps:15,kg:55},{reps:15,kg:66},{reps:15,kg:66}]],"Leg Curl assis machine":[[{reps:15,kg:41},{reps:15,kg:39},{reps:15,kg:41}],[{reps:15,kg:45},{reps:15,kg:45},{reps:15,kg:47}]],"Mollet":[[{reps:20,kg:4},{reps:20,kg:4},{reps:20,kg:4}],[{reps:20,kg:6},{reps:20,kg:6},{reps:20,kg:6}]]}},pecs:{label:"Pecs / Triceps",color:"#e05c2a",exercises:{"Développé couché haltère":[[{reps:12,kg:26},{reps:15,kg:24},{reps:16,kg:24}],[{reps:10,kg:28},{reps:15,kg:25},{reps:15,kg:24}],[{reps:8,kg:28},{reps:12,kg:26},{reps:12,kg:24}]],"Développé couché barre":[[{reps:10,kg:42},{reps:10,kg:42},{reps:10,kg:42}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:52.5}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:50}]],"Dips incliné PECS":[[{reps:15,kg:4.5},{reps:15,kg:4.5},{reps:15,kg:4.5}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}]],"Élévation latérale avant":[[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:14},{reps:20,kg:16},{reps:20,kg:16}],[{reps:20,kg:16},{reps:20,kg:18},{reps:20,kg:18}]],"Élévation latérale côté":[[{reps:15,kg:14},{reps:15,kg:12},{reps:15,kg:14}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:20,kg:16},{reps:20,kg:16}]],"Triceps poulie haute":[[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:13.6}]],"Triceps poulie basse":[[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}],[{reps:15,kg:11},{reps:20,kg:9},{reps:20,kg:9}],[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}]]}},dos:{label:"Dos / Biceps",color:"#3ab5e6",exercises:{"Traction":[[{reps:10,kg:0},{reps:15,kg:4.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:17,kg:6.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:15,kg:4.5},{reps:13,kg:4.5}]],"Tirage vertical prise large":[[{reps:15,kg:52},{reps:16,kg:52},{reps:17,kg:52}],[{reps:18,kg:52},{reps:17,kg:52},{reps:15,kg:47}],[{reps:15,kg:52},{reps:15,kg:52},{reps:16,kg:47}]],"Rowing à la barre":[[{reps:15,kg:40},{reps:15,kg:40},{reps:17,kg:40}],[{reps:20,kg:40},{reps:15,kg:45},{reps:17,kg:42.5}],[{reps:15,kg:40},{reps:19,kg:45},{reps:20,kg:45}]],"Australienne":[[{reps:15,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:20,kg:0},{reps:20,kg:0}]],"Élévation latérale arrière":[[{reps:20,kg:12},{reps:20,kg:12},{reps:20,kg:12}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:15,kg:18},{reps:20,kg:18}]],"Curl":[[{reps:15,kg:14},{reps:15,kg:16},{reps:15,kg:16}],[{reps:15,kg:16},{reps:15,kg:14},{reps:15,kg:14}],[{reps:15,kg:18},{reps:13,kg:18},{reps:12,kg:18}]],"Curl biceps barre EZ":[[{reps:15,kg:25},{reps:15,kg:25},{reps:20,kg:25}],[{reps:15,kg:25},{reps:15,kg:25},{reps:15,kg:22.5}],[{reps:15,kg:25},{reps:15,kg:20},{reps:15,kg:20}]]}}};
 
 let S=JSON.parse(JSON.stringify(DEFAULT));
 
 async function loadData(){
+    if(!userDoc) return;
     setBadge('⏳','#f0a500');
     try {
         const docSnap = await getDoc(userDoc);
         if (docSnap.exists() && docSnap.data().workouts) {
             S = docSnap.data().workouts;
+        } else {
+            // Si l'utilisateur est nouveau, on lui sauvegarde les données par défaut de suite
+            await setDoc(userDoc, { workouts: S });
         }
         setBadge('☁️','#2ecc71');
     } catch(e) {
@@ -241,6 +254,7 @@ async function loadData(){
 }
 
 async function saveData(){
+    if(!userDoc) return;
     try{localStorage.setItem('ms_data',JSON.stringify(S));}catch(e){}
     setBadge('⏳','#f0a500');
     try {
@@ -303,24 +317,60 @@ if(window.navigator.standalone)hideBanner();
 // EXPOSITION DES FONCTIONS AU HTML
 window.hideBanner = hideBanner; window.onTypeChange = onTypeChange; window.updateRef = updateRef; window.addSetRow = addSetRow; window.delSetRow = delSetRow; window.saveSession = saveSession; window.goTab = goTab; window.toggleAcc = toggleAcc; window.askDelete = askDelete; window.confirmDelete = confirmDelete; window.closeModal = closeModal; window.handleModalClick = handleModalClick;
 
-// LOGIQUE D'ÉCRAN DE CONNEXION HARDCODÉE
-if(sessionStorage.getItem('ms_logged_in') === 'true') {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    loadData();
+// LOGIQUE FIREBASE AUTHENTICATION
+const errorDiv = document.getElementById('login-error');
+const successDiv = document.getElementById('login-success');
+
+window.loginWithFirebase = async function() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    errorDiv.style.display = 'none'; successDiv.style.display = 'none';
+    if(!email || !pass) { errorDiv.textContent = "Veuillez remplir les deux champs."; errorDiv.style.display = 'block'; return; }
+    
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+    } catch(error) {
+        errorDiv.textContent = "Identifiants incorrects ou compte inexistant.";
+        errorDiv.style.display = 'block';
+    }
 }
-window.attemptLogin = function() {
-    const u = document.getElementById('login-user').value;
-    const p = document.getElementById('login-pass').value;
-    if(u === 'CamilleLPX' && p === 'CarlosBest') {
-        sessionStorage.setItem('ms_logged_in', 'true');
+
+window.registerWithFirebase = async function() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    errorDiv.style.display = 'none'; successDiv.style.display = 'none';
+    if(!email || !pass) { errorDiv.textContent = "Remplissez l'email et le mot de passe pour créer un compte."; errorDiv.style.display = 'block'; return; }
+    if(pass.length < 6) { errorDiv.textContent = "Le mot de passe doit faire au moins 6 caractères."; errorDiv.style.display = 'block'; return; }
+    
+    try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+        successDiv.textContent = "Compte créé avec succès !";
+        successDiv.style.display = 'block';
+    } catch(error) {
+        errorDiv.textContent = "Erreur lors de la création (l'email est peut-être déjà utilisé).";
+        errorDiv.style.display = 'block';
+    }
+}
+
+window.logoutFirebase = async function() {
+    await signOut(auth);
+}
+
+// SURVEILLER L'ÉTAT DE CONNEXION (Savoir si l'utilisateur est connecté ou non)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // L'utilisateur est connecté, on cible SON document personnel dans la base de données !
+        userDoc = doc(db, "sports_data", user.uid);
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app').style.display = 'flex';
         loadData();
     } else {
-        document.getElementById('login-error').style.display = 'block';
+        // L'utilisateur n'est pas connecté
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('app').style.display = 'none';
+        userDoc = null;
     }
-}
+});
 </script>
 </body>
 </html>

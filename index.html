@@ -9,32 +9,42 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
-:root { --bg:#0d0f14; --surface:#161922; --card:#1e2330; --border:#2a3040; --a1:#f0a500; --a2:#e05c2a; --a3:#3ab5e6; --green:#2ecc71; --red:#e74c3c; --text:#eef0f5; --muted:#6b7590; --nav-h:80px; --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px); }
+:root {
+  --bg:#0d0f14; --surface:#161922; --card:#1e2330; --border:#2a3040;
+  --a1:#f0a500; --a2:#e05c2a; --a3:#3ab5e6; --green:#2ecc71; --red:#e74c3c;
+  --text:#eef0f5; --muted:#6b7590; --nav-h:80px;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px);
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);}
 #app{display:flex;flex-direction:column;height:100%;}
 #topbar{position:fixed;top:0;left:0;right:0;z-index:200;padding-top:var(--safe-top);background:rgba(13,15,20,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:calc(var(--safe-top) + 56px);display:flex;align-items:flex-end;padding:0 18px 10px;justify-content:space-between;}
 #topbar h1{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
-#btn-logout { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.3); color: var(--red); padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;}
+#btn-logout{background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);color:var(--red);padding:4px 10px;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;}
 #screen-area{flex:1;overflow-y:auto;padding-top:calc(var(--safe-top) + 70px);padding-bottom:calc(var(--nav-h) + var(--safe-bot) + 20px);}
 #nav{position:fixed;bottom:0;left:0;right:0;z-index:200;height:calc(var(--nav-h) + var(--safe-bot));background:rgba(22,25,34,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:0.62rem;font-weight:600;cursor:pointer;}
 .nav-btn.active{color:var(--text);}
-.nav-btn[data-tab=jambes].active{color:var(--a1);}.nav-btn[data-tab=pecs].active{color:var(--a2);}.nav-btn[data-tab=dos].active{color:var(--a3);}.nav-btn[data-tab=add].active{color:var(--green);}
+.nav-btn[data-tab=jambes].active{color:var(--a1);}
+.nav-btn[data-tab=pecs].active{color:var(--a2);}
+.nav-btn[data-tab=dos].active{color:var(--a3);}
+.nav-btn[data-tab=add].active{color:var(--green);}
 .screen{display:none;padding:14px;}.screen.active{display:block;}
 .screen-title{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .dot{width:10px;height:10px;border-radius:50%;}
 .exo-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px;margin-bottom:14px;}
 .acc-item{border-radius:9px;overflow:hidden;border:1px solid var(--border);margin-bottom:4px;}
 .acc-toggle{width:100%;background:var(--surface);border:none;color:var(--text);padding:11px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Outfit';font-weight:600;}
-.acc-body{max-height:0;overflow:hidden;transition:max-height 0.25s ease;background:var(--card);}
-.acc-body.open{max-height:600px;}
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;background:var(--card);}
+.acc-body.open{max-height:800px;}
 .acc-row{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:0.82rem;border-bottom:1px solid rgba(255,255,255,0.04);}
 .acc-kg{margin-left:auto;font-weight:700;color:var(--a3);background:rgba(58,181,230,0.1);border-radius:5px;padding:2px 8px;}
 .del-seance-btn{display:block;margin:10px auto;padding:8px;width:90%;background:rgba(231,76,60,0.1);border:1px solid var(--red);color:var(--red);border-radius:8px;font-weight:600;cursor:pointer;}
+.pb-badge{display:inline-block;background:rgba(240,165,0,0.15);border:1px solid rgba(240,165,0,0.4);color:var(--a1);border-radius:6px;font-size:0.72rem;font-weight:700;padding:2px 8px;margin-left:8px;vertical-align:middle;}
+.chart-wrap{position:relative;height:160px;margin-top:12px;}
 #login-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .form-group{width:100%;max-width:320px;margin-bottom:14px;}
-input, select{background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px;width:100%;font-family:'Outfit';}
+input,select{background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px;width:100%;font-family:'Outfit';}
 .btn-save{width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;font-family:'Bebas Neue';font-size:1.25rem;cursor:pointer;margin-top:10px;}
 .sets-list .set-row{display:grid;grid-template-columns:30px 1fr 1fr 40px;gap:8px;margin-bottom:8px;align-items:center;}
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:30px;display:none;z-index:1000;}
@@ -74,7 +84,7 @@ input, select{background:var(--card);border:1px solid var(--border);border-radiu
         <option value="dos">💪 Dos / Biceps</option>
       </select>
       <select id="add-exo" onchange="updateRef()"></select>
-      <div id="ref-last-sets" style="margin:15px 0; font-size:0.8rem; color:var(--muted); background:var(--surface); padding:10px; border-radius:10px;"></div>
+      <div id="ref-last-sets" style="margin:15px 0;font-size:0.8rem;color:var(--muted);background:var(--surface);padding:10px;border-radius:10px;"></div>
       <div id="sets-list" class="sets-list"></div>
       <button onclick="addSetRow()" style="width:100%;padding:10px;background:none;border:1px dashed var(--border);color:var(--muted);border-radius:10px;margin-top:10px;">+ Ajouter série</button>
       <button class="btn-save" onclick="saveSession()">💾 ENREGISTRER</button>
@@ -92,7 +102,7 @@ input, select{background:var(--card);border:1px solid var(--border);border-radiu
 <div class="modal-overlay" id="modal">
   <div class="modal-sheet">
     <h3>Supprimer ?</h3>
-    <p id="modal-sub" style="margin:15px 0; color:var(--muted);"></p>
+    <p id="modal-sub" style="margin:15px 0;color:var(--muted);"></p>
     <div style="display:flex;gap:10px;">
       <button onclick="closeModal()" style="flex:1;padding:12px;border-radius:10px;border:none;">Annuler</button>
       <button onclick="confirmDelete()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--red);color:#fff;">Supprimer</button>
@@ -103,241 +113,313 @@ input, select{background:var(--card);border:1px solid var(--border);border-radiu
 <div id="toast" class="toast"></div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
-    authDomain: "myworkoutcam.firebaseapp.com",
-    projectId: "myworkoutcam",
-    storageBucket: "myworkoutcam.firebasestorage.app",
-    messagingSenderId: "1074226820732",
-    appId: "1:1074226820732:web:08ed1ca28f0c919b82bbf9"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
+  authDomain: "myworkoutcam.firebaseapp.com",
+  projectId: "myworkoutcam",
+  storageBucket: "myworkoutcam.firebasestorage.app",
+  messagingSenderId: "1074226820732",
+  appId: "1:1074226820732:web:08ed1ca28f0c919b82bbf9"
+};
 
-  const fbApp = initializeApp(firebaseConfig);
-  const db = getFirestore(fbApp);
-  const auth = getAuth(fbApp);
+const fbApp = initializeApp(firebaseConfig);
+const db    = getFirestore(fbApp);
+const auth  = getAuth(fbApp);
 
-  // userDoc sera défini dès que Firebase confirme la session
-  let userDoc = null;
+let userDoc = null;
 
-  const DEFAULT = {
-    jambes: { label:"Bas du Corps", color:"#f0a500", exercises:{ "Squat":[], "Leg Press":[], "Leg Curl assis machine":[], "Mollet":[] }},
-    pecs:   { label:"Pecs / Triceps", color:"#e05c2a", exercises:{ "Développé couché haltère":[], "Développé couché barre":[], "Dips incliné PECS":[], "Élévation latérale avant":[], "Élévation latérale côté":[], "Triceps poulie haute":[], "Triceps poulie basse":[] }},
-    dos:    { label:"Dos / Biceps", color:"#3ab5e6", exercises:{ "Traction":[], "Tirage vertical prise large":[], "Rowing à la barre":[], "Australienne":[], "Élévation latérale arrière":[], "Curl":[], "Curl biceps barre EZ":[] }}
-  };
+// ─────────────────────────────────────────────────────────────────────────────
+// STRUCTURE DE DONNÉES — IMPORTANT
+//
+// Firestore interdit les tableaux imbriqués dans des tableaux.
+// Chaque séance est stockée comme un OBJET { sets: [...] }
+// et NON comme un tableau direct.
+//
+//   exercises["Squat"] = [
+//     { sets: [ {reps:10, kg:80}, {reps:8, kg:75} ] },   ← séance 1
+//     { sets: [ {reps:12, kg:85} ] }                      ← séance 2
+//   ]
+// ─────────────────────────────────────────────────────────────────────────────
 
-  let S = JSON.parse(JSON.stringify(DEFAULT));
+const DEFAULT = {
+  jambes: { label:"Bas du Corps",   color:"#f0a500", exercises:{ "Squat":[], "Leg Press":[], "Leg Curl assis machine":[], "Mollet":[] }},
+  pecs:   { label:"Pecs / Triceps", color:"#e05c2a", exercises:{ "Développé couché haltère":[], "Développé couché barre":[], "Dips incliné PECS":[], "Élévation latérale avant":[], "Élévation latérale côté":[], "Triceps poulie haute":[], "Triceps poulie basse":[] }},
+  dos:    { label:"Dos / Biceps",   color:"#3ab5e6", exercises:{ "Traction":[], "Tirage vertical prise large":[], "Rowing à la barre":[], "Australienne":[], "Élévation latérale arrière":[], "Curl":[], "Curl biceps barre EZ":[] }}
+};
 
-  // ─── CORRECTION PRINCIPALE : fusion profonde des données Firebase ───────────
-  // On part toujours d'une copie fraîche de DEFAULT pour ne jamais perdre
-  // les nouveaux exercices ajoutés dans le code, puis on y écrase les
-  // séances déjà enregistrées dans Firebase (et on conserve les exercices
-  // custom qui ne seraient plus dans DEFAULT).
-  function mergeWithCloud(cloudData) {
-    const merged = JSON.parse(JSON.stringify(DEFAULT));
-    for (const k of Object.keys(DEFAULT)) {
-      if (!cloudData[k]?.exercises) continue;
-      // Exercices présents dans DEFAULT → on prend les séances du cloud
-      for (const exo of Object.keys(DEFAULT[k].exercises)) {
-        if (cloudData[k].exercises[exo] !== undefined) {
-          merged[k].exercises[exo] = cloudData[k].exercises[exo];
-        }
-      }
-      // Exercices custom ajoutés par l'utilisateur (pas dans DEFAULT) → on les conserve
-      for (const exo of Object.keys(cloudData[k].exercises)) {
-        if (!merged[k].exercises[exo]) {
-          merged[k].exercises[exo] = cloudData[k].exercises[exo];
-        }
-      }
-    }
-    return merged;
-  }
-  // ────────────────────────────────────────────────────────────────────────────
+let S = JSON.parse(JSON.stringify(DEFAULT));
+const chartInstances = {};
 
-  async function loadData() {
-    if (!userDoc) return;
-    setBadge('⏳', '#f0a500');
-    try {
-      const snap = await getDoc(userDoc);
-      if (snap.exists()) {
-        S = mergeWithCloud(snap.data().workouts);
-      } else {
-        // Première connexion : on initialise le document Firebase avec DEFAULT
-        await setDoc(userDoc, { workouts: S });
-      }
-      setBadge('☁️', '#2ecc71');
-    } catch (e) {
-      console.error('[loadData] Erreur Firebase :', e);
-      setBadge('📵', '#e74c3c');
-      // Fallback : on essaie de charger depuis localStorage
-      const local = localStorage.getItem('ms_data');
-      if (local) {
-        try { S = JSON.parse(local); } catch (_) {}
-      }
-    }
-    renderAll();
-  }
+// ─── UTILITAIRES ─────────────────────────────────────────────────────────────
 
-  async function saveData() {
-    if (!userDoc) {
-      // userDoc pas encore prêt (rare race-condition au démarrage) → on réessaie dans 1s
-      console.warn('[saveData] userDoc non prêt, retry dans 1s…');
-      setTimeout(saveData, 1000);
-      return;
-    }
-    // Sauvegarde locale immédiate (fallback hors-ligne)
-    localStorage.setItem('ms_data', JSON.stringify(S));
-    setBadge('⏳', '#f0a500');
-    try {
-      await setDoc(userDoc, { workouts: S });
-      setBadge('☁️', '#2ecc71');
-    } catch (e) {
-      console.error('[saveData] Erreur Firebase :', e);
-      setBadge('📵', '#e74c3c');
+function setBestVolume(set) {
+  return set.reps * (set.kg || 0);
+}
+
+function getPreviousBest(seances) {
+  let best = null;
+  for (const seance of seances) {
+    for (const set of (seance.sets || [])) {
+      if (!best || setBestVolume(set) > setBestVolume(best)) best = set;
     }
   }
+  return best;
+}
 
-  function setBadge(t, c) {
-    const b = document.getElementById('sync-badge');
-    b.textContent = t;
-    b.style.color = c;
+function sessionVolume(seance) {
+  return (seance.sets || []).reduce((acc, s) => acc + s.reps * (s.kg || 0), 0);
+}
+
+// ─── FUSION PROFONDE ──────────────────────────────────────────────────────────
+function mergeWithCloud(cloudData) {
+  const merged = JSON.parse(JSON.stringify(DEFAULT));
+  for (const k of Object.keys(DEFAULT)) {
+    if (!cloudData[k]?.exercises) continue;
+    for (const exo of Object.keys(DEFAULT[k].exercises)) {
+      if (cloudData[k].exercises[exo] !== undefined)
+        merged[k].exercises[exo] = cloudData[k].exercises[exo];
+    }
+    for (const exo of Object.keys(cloudData[k].exercises)) {
+      if (!merged[k].exercises[exo])
+        merged[k].exercises[exo] = cloudData[k].exercises[exo];
+    }
   }
+  return merged;
+}
 
-  // ─── NAVIGATION ─────────────────────────────────────────────────────────────
-  window.goTab = (k) => {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('screen-' + k).classList.add('active');
-    document.querySelector(`.nav-btn[data-tab="${k}"]`).classList.add('active');
-    if (k === 'add') window.updateRef();
-  };
-
-  window.onTypeChange = () => {
-    const type = document.getElementById('add-type').value;
-    const sel = document.getElementById('add-exo');
-    sel.innerHTML = Object.keys(S[type].exercises).map(e => `<option value="${e}">${e}</option>`).join('');
-    window.updateRef();
-  };
-
-  window.updateRef = () => {
-    const type = document.getElementById('add-type').value;
-    const exo  = document.getElementById('add-exo').value;
-    const h    = S[type].exercises[exo] || [];
-    const last = h.filter(s => s && s.length > 0).pop() || [];
-    document.getElementById('ref-last-sets').innerHTML = last.length
-      ? 'Dernière : ' + last.map(s => `${s.reps}@${s.kg}kg`).join(' | ')
-      : 'Aucun historique pour cet exo';
-  };
-
-  window.addSetRow = () => {
-    const list = document.getElementById('sets-list');
-    const id   = 'sr-' + Date.now() + Math.random();
-    const div  = document.createElement('div');
-    div.className = 'set-row';
-    div.id = id;
-    div.innerHTML = `
-      <div class="set-num">${list.children.length + 1}</div>
-      <input type="number" placeholder="Reps">
-      <input type="number" placeholder="Kg">
-      <button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--red);font-size:1.2rem;">✕</button>`;
-    list.appendChild(div);
-  };
-
-  window.saveSession = () => {
-    const type = document.getElementById('add-type').value;
-    const exo  = document.getElementById('add-exo').value;
-    const sets = [];
-    document.querySelectorAll('#sets-list .set-row').forEach(row => {
-      const ins = row.querySelectorAll('input');
-      if (ins[0].value) sets.push({ reps: parseInt(ins[0].value), kg: parseFloat(ins[1].value) || 0 });
-    });
-    if (!sets.length) return;
-    if (!S[type].exercises[exo]) S[type].exercises[exo] = [];
-    S[type].exercises[exo].push(sets);
-    saveData();
-    renderAll();
-    window.goTab(type);
-  };
-
-  window.toggleAcc = (id) => document.getElementById(id).classList.toggle('open');
-
-  let pending = null;
-
-  window.askDelete = (k, e, i) => {
-    pending = { k, e, i };
-    document.getElementById('modal-sub').textContent = `${e} - Séance ${i + 1}`;
-    document.getElementById('modal').classList.add('show');
-  };
-
-  window.confirmDelete = () => {
-    S[pending.k].exercises[pending.e].splice(pending.i, 1);
-    saveData();
-    renderAll();
-    window.closeModal();
-  };
-
-  window.closeModal = () => document.getElementById('modal').classList.remove('show');
-
-  // ─── RENDU ──────────────────────────────────────────────────────────────────
-  function renderAll() {
-    ['jambes', 'pecs', 'dos'].forEach(k => {
-      const el = document.getElementById('screen-' + k);
-      let html = `<div class="screen-title"><div class="dot" style="background:${S[k].color}"></div>${S[k].label}</div>`;
-      for (const [name, seances] of Object.entries(S[k].exercises)) {
-        const valid = seances.filter(s => s && s.length > 0);
-        if (valid.length === 0) continue;
-        const safeId = name.replace(/\s/g, '').replace(/[^a-zA-Z0-9]/g, '');
-        let acc = valid.map((s, i) => `
-          <div class="acc-item">
-            <button class="acc-toggle" onclick="toggleAcc('acc-${k}-${safeId}-${i}')">Séance ${i + 1} ▾</button>
-            <div class="acc-body" id="acc-${k}-${safeId}-${i}">
-              ${s.map(set => `<div class="acc-row"><span>${set.reps} reps</span><span class="acc-kg">${set.kg}kg</span></div>`).join('')}
-              <button class="del-seance-btn" onclick="askDelete('${k}','${name}',${i})">🗑 Supprimer</button>
-            </div>
-          </div>`).join('');
-        html += `<div class="exo-card"><div style="font-weight:700;margin-bottom:10px;">${name}</div>${acc}</div>`;
-      }
-      el.innerHTML = html;
-    });
-    window.onTypeChange();
-    document.getElementById('sets-list').innerHTML = '';
-    for (let i = 0; i < 3; i++) window.addSetRow();
-  }
-
-  // ─── AUTH ────────────────────────────────────────────────────────────────────
-  window.loginWithFirebase = () => {
-    const e = document.getElementById('login-email').value;
-    const p = document.getElementById('login-pass').value;
-    signInWithEmailAndPassword(auth, e, p)
-      .catch(err => alert("Erreur de connexion : " + err.message));
-  };
-
-  window.registerWithFirebase = () => {
-    const e = document.getElementById('login-email').value;
-    const p = document.getElementById('login-pass').value;
-    createUserWithEmailAndPassword(auth, e, p)
-      .catch(err => alert("Erreur de création : " + err.message));
-  };
-
-  window.logoutFirebase = () => signOut(auth);
-
-  // onAuthStateChanged est le point d'entrée principal.
-  // C'est ici qu'on initialise userDoc — AVANT tout appel à loadData/saveData.
-  onAuthStateChanged(auth, u => {
-    if (u) {
-      userDoc = doc(db, "sports_data", u.uid);
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'flex';
-      loadData();
+// ─── FIREBASE ─────────────────────────────────────────────────────────────────
+async function loadData() {
+  if (!userDoc) return;
+  setBadge('⏳', '#f0a500');
+  try {
+    const snap = await getDoc(userDoc);
+    if (snap.exists()) {
+      S = mergeWithCloud(snap.data().workouts);
     } else {
-      userDoc = null;
-      document.getElementById('login-screen').style.display = 'flex';
-      document.getElementById('app').style.display = 'none';
+      await setDoc(userDoc, { workouts: S });
+    }
+    setBadge('☁️', '#2ecc71');
+  } catch (e) {
+    console.error('[loadData] Erreur Firebase :', e);
+    setBadge('📵', '#e74c3c');
+    const local = localStorage.getItem('ms_data');
+    if (local) { try { S = JSON.parse(local); } catch (_) {} }
+  }
+  renderAll();
+}
+
+async function saveData() {
+  if (!userDoc) {
+    console.warn('[saveData] userDoc non prêt, retry dans 1s…');
+    setTimeout(saveData, 1000);
+    return;
+  }
+  localStorage.setItem('ms_data', JSON.stringify(S));
+  setBadge('⏳', '#f0a500');
+  try {
+    await setDoc(userDoc, { workouts: S });
+    setBadge('☁️', '#2ecc71');
+  } catch (e) {
+    console.error('[saveData] Erreur Firebase :', e);
+    setBadge('📵', '#e74c3c');
+  }
+}
+
+function setBadge(t, c) {
+  const b = document.getElementById('sync-badge');
+  b.textContent = t; b.style.color = c;
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+window.goTab = (k) => {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + k).classList.add('active');
+  document.querySelector(`.nav-btn[data-tab="${k}"]`).classList.add('active');
+  if (k === 'add') window.updateRef();
+};
+
+window.onTypeChange = () => {
+  const type = document.getElementById('add-type').value;
+  const sel  = document.getElementById('add-exo');
+  sel.innerHTML = Object.keys(S[type].exercises).map(e => `<option value="${e}">${e}</option>`).join('');
+  window.updateRef();
+};
+
+window.updateRef = () => {
+  const type    = document.getElementById('add-type').value;
+  const exo     = document.getElementById('add-exo').value;
+  const seances = (S[type].exercises[exo] || []).filter(s => s.sets?.length > 0);
+  const last    = seances.length ? seances[seances.length - 1].sets : [];
+  const best    = getPreviousBest(seances);
+
+  let html = '';
+  if (last.length)
+    html += '<div style="margin-bottom:6px;">🕐 <b>Dernière :</b> ' + last.map(s => `${s.reps}@${s.kg}kg`).join(' | ') + '</div>';
+  if (best)
+    html += '<div>🏆 <b>Previous best :</b> ' + `${best.reps} reps @ ${best.kg} kg` + ' <span style="color:var(--muted);font-size:0.75rem;">(vol. ' + setBestVolume(best) + ')</span></div>';
+  if (!html) html = 'Aucun historique pour cet exercice';
+  document.getElementById('ref-last-sets').innerHTML = html;
+};
+
+window.addSetRow = () => {
+  const list = document.getElementById('sets-list');
+  const id   = 'sr-' + Date.now() + Math.random();
+  const div  = document.createElement('div');
+  div.className = 'set-row'; div.id = id;
+  div.innerHTML = `
+    <div class="set-num">${list.children.length + 1}</div>
+    <input type="number" placeholder="Reps" min="1">
+    <input type="number" placeholder="Kg" min="0" step="0.5">
+    <button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--red);font-size:1.2rem;">✕</button>`;
+  list.appendChild(div);
+};
+
+window.saveSession = () => {
+  const type = document.getElementById('add-type').value;
+  const exo  = document.getElementById('add-exo').value;
+  const sets = [];
+  document.querySelectorAll('#sets-list .set-row').forEach(row => {
+    const ins = row.querySelectorAll('input');
+    if (ins[0].value) sets.push({ reps: parseInt(ins[0].value), kg: parseFloat(ins[1].value) || 0 });
+  });
+  if (!sets.length) return;
+  if (!S[type].exercises[exo]) S[type].exercises[exo] = [];
+  // ✅ { sets: [...] } et non un tableau direct — compatible Firestore
+  S[type].exercises[exo].push({ sets });
+  saveData();
+  renderAll();
+  window.goTab(type);
+};
+
+window.toggleAcc = (id) => document.getElementById(id).classList.toggle('open');
+
+let pending = null;
+window.askDelete = (k, e, i) => {
+  pending = { k, e, i };
+  document.getElementById('modal-sub').textContent = `${e} — Séance ${i + 1}`;
+  document.getElementById('modal').classList.add('show');
+};
+window.confirmDelete = () => {
+  S[pending.k].exercises[pending.e].splice(pending.i, 1);
+  saveData(); renderAll(); window.closeModal();
+};
+window.closeModal = () => document.getElementById('modal').classList.remove('show');
+
+// ─── GRAPHIQUES ───────────────────────────────────────────────────────────────
+function renderChart(canvasId, seances, color) {
+  if (chartInstances[canvasId]) {
+    chartInstances[canvasId].destroy();
+    delete chartInstances[canvasId];
+  }
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  chartInstances[canvasId] = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: seances.map((_, i) => `S${i + 1}`),
+      datasets: [{
+        data: seances.map(s => sessionVolume(s)),
+        borderColor: color,
+        backgroundColor: color + '22',
+        borderWidth: 2,
+        pointBackgroundColor: color,
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } },
+        y: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } }
+      }
     }
   });
+}
+
+// ─── RENDU ────────────────────────────────────────────────────────────────────
+function renderAll() {
+  ['jambes', 'pecs', 'dos'].forEach(k => {
+    const el    = document.getElementById('screen-' + k);
+    const color = S[k].color;
+    let html = `<div class="screen-title"><div class="dot" style="background:${color}"></div>${S[k].label}</div>`;
+
+    for (const [name, seances] of Object.entries(S[k].exercises)) {
+      const valid  = seances.filter(s => s.sets?.length > 0);
+      if (!valid.length) continue;
+      const best   = getPreviousBest(valid);
+      const safeId = name.replace(/[^a-zA-Z0-9]/g, '');
+      const chartId = `chart-${k}-${safeId}`;
+      const bestBadge = best ? `<span class="pb-badge">🏆 ${best.reps}×${best.kg}kg</span>` : '';
+      const accItems = valid.map((s, i) => `
+        <div class="acc-item">
+          <button class="acc-toggle" onclick="toggleAcc('acc-${k}-${safeId}-${i}')">
+            Séance ${i + 1} <span style="color:var(--muted);font-size:0.75rem;margin-left:6px;">vol. ${sessionVolume(s)}</span> ▾
+          </button>
+          <div class="acc-body" id="acc-${k}-${safeId}-${i}">
+            ${s.sets.map(set => `<div class="acc-row"><span>${set.reps} reps</span><span class="acc-kg">${set.kg}kg</span></div>`).join('')}
+            <button class="del-seance-btn" onclick="askDelete('${k}','${name}',${i})">🗑 Supprimer</button>
+          </div>
+        </div>`).join('');
+      const chartHtml = valid.length >= 2
+        ? `<div style="margin-top:10px;font-size:0.75rem;color:var(--muted);">📈 Progression (volume total)</div>
+           <div class="chart-wrap"><canvas id="${chartId}"></canvas></div>`
+        : '';
+      html += `
+        <div class="exo-card">
+          <div style="font-weight:700;margin-bottom:6px;">${name} ${bestBadge}</div>
+          ${accItems}
+          ${chartHtml}
+        </div>`;
+    }
+    el.innerHTML = html;
+
+    // Init charts après injection dans le DOM
+    for (const [name, seances] of Object.entries(S[k].exercises)) {
+      const valid = seances.filter(s => s.sets?.length > 0);
+      if (valid.length < 2) continue;
+      renderChart(`chart-${k}-${name.replace(/[^a-zA-Z0-9]/g, '')}`, valid, color);
+    }
+  });
+
+  window.onTypeChange();
+  document.getElementById('sets-list').innerHTML = '';
+  for (let i = 0; i < 3; i++) window.addSetRow();
+}
+
+// ─── AUTH ──────────────────────────────────────────────────────────────────────
+window.loginWithFirebase = () => {
+  const e = document.getElementById('login-email').value;
+  const p = document.getElementById('login-pass').value;
+  signInWithEmailAndPassword(auth, e, p).catch(err => alert('Erreur : ' + err.message));
+};
+window.registerWithFirebase = () => {
+  const e = document.getElementById('login-email').value;
+  const p = document.getElementById('login-pass').value;
+  createUserWithEmailAndPassword(auth, e, p).catch(err => alert('Erreur : ' + err.message));
+};
+window.logoutFirebase = () => signOut(auth);
+
+onAuthStateChanged(auth, u => {
+  if (u) {
+    userDoc = doc(db, 'sports_data', u.uid);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    loadData();
+  } else {
+    userDoc = null;
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
 </script>
 </body>
 </html>

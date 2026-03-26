@@ -239,28 +239,38 @@ async function loadData(){
     setBadge('⏳','#f0a500');
     try {
         const docSnap = await getDoc(userDoc);
-        if (docSnap.exists() && docSnap.data().workouts) {
-            S = docSnap.data().workouts;
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data && data.workouts) {
+                S = data.workouts;
+            }
         } else {
-            // Si l'utilisateur est nouveau, on lui sauvegarde les données par défaut de suite
+            // Si l'utilisateur est nouveau, on crée son dossier avec les données par défaut
             await setDoc(userDoc, { workouts: S });
         }
+        renderAll();
         setBadge('☁️','#2ecc71');
     } catch(e) {
-        try{const r=localStorage.getItem('ms_data');if(r)S=JSON.parse(r);}catch(e2){}
+        console.error("Erreur de chargement:", e);
+        try {
+            const r = localStorage.getItem('ms_data');
+            if(r) S = JSON.parse(r);
+        } catch(e2){}
         setBadge('📵','#e74c3c');
     }
-    renderAll();
 }
 
 async function saveData(){
     if(!userDoc) return;
-    try{localStorage.setItem('ms_data',JSON.stringify(S));}catch(e){}
+    // On garde une copie locale au cas où
+    try { localStorage.setItem('ms_data', JSON.stringify(S)); } catch(e){}
+    
     setBadge('⏳','#f0a500');
     try {
         await setDoc(userDoc, { workouts: S });
         setBadge('☁️','#2ecc71');
     } catch(e) {
+        console.error("Erreur de sauvegarde:", e);
         setBadge('📵','#e74c3c');
     }
 }

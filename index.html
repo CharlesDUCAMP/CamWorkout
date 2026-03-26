@@ -8,7 +8,6 @@
 <title>MonSport</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* TON CSS D'ORIGINE */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
 :root { --bg:#0d0f14; --surface:#161922; --card:#1e2330; --border:#2a3040; --a1:#f0a500; --a2:#e05c2a; --a3:#3ab5e6; --green:#2ecc71; --red:#e74c3c; --text:#eef0f5; --muted:#6b7590; --nav-h:80px; --safe-top:env(safe-area-inset-top,0px); --safe-bot:env(safe-area-inset-bottom,0px); }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -47,231 +46,298 @@ input, select{background:var(--card);border:1px solid var(--border);border-radiu
 <body>
 
 <div id="login-screen">
-    <h1 style="font-family:'Bebas Neue';font-size:3.5rem;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;">MonSport</h1>
-    <div class="form-group"><input type="email" id="login-email" placeholder="Email"></div>
-    <div class="form-group"><input type="password" id="login-pass" placeholder="Mot de passe"></div>
-    <button class="btn-save" onclick="loginWithFirebase()">SE CONNECTER</button>
-    <button onclick="registerWithFirebase()" style="background:none;border:none;color:var(--muted);margin-top:20px;text-decoration:underline;">Créer un compte</button>
+  <h1 style="font-family:'Bebas Neue';font-size:3.5rem;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;">MonSport</h1>
+  <div class="form-group"><input type="email" id="login-email" placeholder="Email"></div>
+  <div class="form-group"><input type="password" id="login-pass" placeholder="Mot de passe"></div>
+  <button class="btn-save" onclick="loginWithFirebase()">SE CONNECTER</button>
+  <button onclick="registerWithFirebase()" style="background:none;border:none;color:var(--muted);margin-top:20px;text-decoration:underline;">Créer un compte</button>
 </div>
 
 <div id="app" style="display:none;">
-    <div id="topbar">
-        <h1>💪 MonSport <button id="btn-logout" onclick="logoutFirebase()">Quitter</button></h1>
-        <div style="text-align:right">
-            <div id="topbar-sub" style="font-size:0.72rem;color:var(--muted);">Bas du Corps</div>
-            <div id="sync-badge" style="font-size:0.68rem;color:var(--muted);">💾 local</div>
-        </div>
+  <div id="topbar">
+    <h1>💪 MonSport <button id="btn-logout" onclick="logoutFirebase()">Quitter</button></h1>
+    <div style="text-align:right">
+      <div id="topbar-sub" style="font-size:0.72rem;color:var(--muted);">Bas du Corps</div>
+      <div id="sync-badge" style="font-size:0.68rem;color:var(--muted);">💾 local</div>
     </div>
+  </div>
 
-    <div id="screen-area">
-        <div class="screen active" id="screen-jambes"></div>
-        <div class="screen" id="screen-pecs"></div>
-        <div class="screen" id="screen-dos"></div>
-        <div class="screen" id="screen-add">
-            <div class="screen-title" style="color:var(--green)">➕ Nouvelle séance</div>
-            <select id="add-type" onchange="onTypeChange()" style="margin-bottom:10px;">
-                <option value="jambes">🦵 Bas du Corps</option>
-                <option value="pecs">🏋️ Pecs / Triceps</option>
-                <option value="dos">💪 Dos / Biceps</option>
-            </select>
-            <select id="add-exo" onchange="updateRef()"></select>
-            <div id="ref-last-sets" style="margin:15px 0; font-size:0.8rem; color:var(--muted); background:var(--surface); padding:10px; border-radius:10px;"></div>
-            <div id="sets-list" class="sets-list"></div>
-            <button onclick="addSetRow()" style="width:100%;padding:10px;background:none;border:1px dashed var(--border);color:var(--muted);border-radius:10px;margin-top:10px;">+ Ajouter série</button>
-            <button class="btn-save" onclick="saveSession()">💾 ENREGISTRER</button>
-        </div>
+  <div id="screen-area">
+    <div class="screen active" id="screen-jambes"></div>
+    <div class="screen" id="screen-pecs"></div>
+    <div class="screen" id="screen-dos"></div>
+    <div class="screen" id="screen-add">
+      <div class="screen-title" style="color:var(--green)">➕ Nouvelle séance</div>
+      <select id="add-type" onchange="onTypeChange()" style="margin-bottom:10px;">
+        <option value="jambes">🦵 Bas du Corps</option>
+        <option value="pecs">🏋️ Pecs / Triceps</option>
+        <option value="dos">💪 Dos / Biceps</option>
+      </select>
+      <select id="add-exo" onchange="updateRef()"></select>
+      <div id="ref-last-sets" style="margin:15px 0; font-size:0.8rem; color:var(--muted); background:var(--surface); padding:10px; border-radius:10px;"></div>
+      <div id="sets-list" class="sets-list"></div>
+      <button onclick="addSetRow()" style="width:100%;padding:10px;background:none;border:1px dashed var(--border);color:var(--muted);border-radius:10px;margin-top:10px;">+ Ajouter série</button>
+      <button class="btn-save" onclick="saveSession()">💾 ENREGISTRER</button>
     </div>
+  </div>
 
-    <nav id="nav">
-        <button class="nav-btn active" data-tab="jambes" onclick="goTab('jambes')"><span>🦵</span><span>Jambes</span></button>
-        <button class="nav-btn" data-tab="pecs" onclick="goTab('pecs')"><span>🏋️</span><span>Pecs</span></button>
-        <button class="nav-btn" data-tab="dos" onclick="goTab('dos')"><span>💪</span><span>Dos</span></button>
-        <button class="nav-btn" data-tab="add" onclick="goTab('add')"><span>➕</span><span>Ajouter</span></button>
-    </nav>
+  <nav id="nav">
+    <button class="nav-btn active" data-tab="jambes" onclick="goTab('jambes')"><span>🦵</span><span>Jambes</span></button>
+    <button class="nav-btn" data-tab="pecs" onclick="goTab('pecs')"><span>🏋️</span><span>Pecs</span></button>
+    <button class="nav-btn" data-tab="dos" onclick="goTab('dos')"><span>💪</span><span>Dos</span></button>
+    <button class="nav-btn" data-tab="add" onclick="goTab('add')"><span>➕</span><span>Ajouter</span></button>
+  </nav>
 </div>
 
 <div class="modal-overlay" id="modal">
-    <div class="modal-sheet">
-        <h3>Supprimer ?</h3>
-        <p id="modal-sub" style="margin:15px 0; color:var(--muted);"></p>
-        <div style="display:flex;gap:10px;">
-            <button onclick="closeModal()" style="flex:1;padding:12px;border-radius:10px;border:none;">Annuler</button>
-            <button onclick="confirmDelete()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--red);color:#fff;">Supprimer</button>
-        </div>
+  <div class="modal-sheet">
+    <h3>Supprimer ?</h3>
+    <p id="modal-sub" style="margin:15px 0; color:var(--muted);"></p>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeModal()" style="flex:1;padding:12px;border-radius:10px;border:none;">Annuler</button>
+      <button onclick="confirmDelete()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--red);color:#fff;">Supprimer</button>
     </div>
+  </div>
 </div>
+
 <div id="toast" class="toast"></div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
-  authDomain: "myworkoutcam.firebaseapp.com",
-  projectId: "myworkoutcam",
-  storageBucket: "myworkoutcam.firebasestorage.app",
-  messagingSenderId: "1074226820732",
-  appId: "1:1074226820732:web:08ed1ca28f0c919b82bbf9"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
+    authDomain: "myworkoutcam.firebaseapp.com",
+    projectId: "myworkoutcam",
+    storageBucket: "myworkoutcam.firebasestorage.app",
+    messagingSenderId: "1074226820732",
+    appId: "1:1074226820732:web:08ed1ca28f0c919b82bbf9"
+  };
 
-const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
-const auth = getAuth(fbApp);
-let userDoc = null;
+  const fbApp = initializeApp(firebaseConfig);
+  const db = getFirestore(fbApp);
+  const auth = getAuth(fbApp);
 
-// ICI TA LISTE COMPLÈTE D'EXERCICES
-const DEFAULT={
-    jambes:{label:"Bas du Corps",color:"#f0a500",exercises:{"Squat":[],"Leg Press":[],"Leg Curl assis machine":[],"Mollet":[]}},
-    pecs:{label:"Pecs / Triceps",color:"#e05c2a",exercises:{"Développé couché haltère":[],"Développé couché barre":[],"Dips incliné PECS":[],"Élévation latérale avant":[],"Élévation latérale côté":[],"Triceps poulie haute":[],"Triceps poulie basse":[]}},
-    dos:{label:"Dos / Biceps",color:"#3ab5e6",exercises:{"Traction":[],"Tirage vertical prise large":[],"Rowing à la barre":[],"Australienne":[],"Élévation latérale arrière":[],"Curl":[],"Curl biceps barre EZ":[]}}
-};
-let S = JSON.parse(JSON.stringify(DEFAULT));
+  // userDoc sera défini dès que Firebase confirme la session
+  let userDoc = null;
 
-async function loadData() {
-    if(!userDoc) return;
-    setBadge('⏳','#f0a500');
-    try {
-        const snap = await getDoc(userDoc);
-        if(snap.exists()) {
-            // On fusionne pour être sûr de garder les nouveaux exos si tu en ajoutes dans le code
-            const cloudData = snap.data().workouts;
-            S = {...DEFAULT, ...cloudData}; 
-        } else {
-            await setDoc(userDoc, { workouts: S });
+  const DEFAULT = {
+    jambes: { label:"Bas du Corps", color:"#f0a500", exercises:{ "Squat":[], "Leg Press":[], "Leg Curl assis machine":[], "Mollet":[] }},
+    pecs:   { label:"Pecs / Triceps", color:"#e05c2a", exercises:{ "Développé couché haltère":[], "Développé couché barre":[], "Dips incliné PECS":[], "Élévation latérale avant":[], "Élévation latérale côté":[], "Triceps poulie haute":[], "Triceps poulie basse":[] }},
+    dos:    { label:"Dos / Biceps", color:"#3ab5e6", exercises:{ "Traction":[], "Tirage vertical prise large":[], "Rowing à la barre":[], "Australienne":[], "Élévation latérale arrière":[], "Curl":[], "Curl biceps barre EZ":[] }}
+  };
+
+  let S = JSON.parse(JSON.stringify(DEFAULT));
+
+  // ─── CORRECTION PRINCIPALE : fusion profonde des données Firebase ───────────
+  // On part toujours d'une copie fraîche de DEFAULT pour ne jamais perdre
+  // les nouveaux exercices ajoutés dans le code, puis on y écrase les
+  // séances déjà enregistrées dans Firebase (et on conserve les exercices
+  // custom qui ne seraient plus dans DEFAULT).
+  function mergeWithCloud(cloudData) {
+    const merged = JSON.parse(JSON.stringify(DEFAULT));
+    for (const k of Object.keys(DEFAULT)) {
+      if (!cloudData[k]?.exercises) continue;
+      // Exercices présents dans DEFAULT → on prend les séances du cloud
+      for (const exo of Object.keys(DEFAULT[k].exercises)) {
+        if (cloudData[k].exercises[exo] !== undefined) {
+          merged[k].exercises[exo] = cloudData[k].exercises[exo];
         }
-        setBadge('☁️','#2ecc71');
-    } catch(e) { 
-        setBadge('📵','#e74c3c');
-        const local = localStorage.getItem('ms_data');
-        if(local) S = JSON.parse(local);
+      }
+      // Exercices custom ajoutés par l'utilisateur (pas dans DEFAULT) → on les conserve
+      for (const exo of Object.keys(cloudData[k].exercises)) {
+        if (!merged[k].exercises[exo]) {
+          merged[k].exercises[exo] = cloudData[k].exercises[exo];
+        }
+      }
+    }
+    return merged;
+  }
+  // ────────────────────────────────────────────────────────────────────────────
+
+  async function loadData() {
+    if (!userDoc) return;
+    setBadge('⏳', '#f0a500');
+    try {
+      const snap = await getDoc(userDoc);
+      if (snap.exists()) {
+        S = mergeWithCloud(snap.data().workouts);
+      } else {
+        // Première connexion : on initialise le document Firebase avec DEFAULT
+        await setDoc(userDoc, { workouts: S });
+      }
+      setBadge('☁️', '#2ecc71');
+    } catch (e) {
+      console.error('[loadData] Erreur Firebase :', e);
+      setBadge('📵', '#e74c3c');
+      // Fallback : on essaie de charger depuis localStorage
+      const local = localStorage.getItem('ms_data');
+      if (local) {
+        try { S = JSON.parse(local); } catch (_) {}
+      }
     }
     renderAll();
-}
+  }
 
-async function saveData() {
-    if(!userDoc) return;
+  async function saveData() {
+    if (!userDoc) {
+      // userDoc pas encore prêt (rare race-condition au démarrage) → on réessaie dans 1s
+      console.warn('[saveData] userDoc non prêt, retry dans 1s…');
+      setTimeout(saveData, 1000);
+      return;
+    }
+    // Sauvegarde locale immédiate (fallback hors-ligne)
     localStorage.setItem('ms_data', JSON.stringify(S));
-    setBadge('⏳','#f0a500');
+    setBadge('⏳', '#f0a500');
     try {
-        await setDoc(userDoc, { workouts: S });
-        setBadge('☁️','#2ecc71');
-    } catch(e) { setBadge('📵','#e74c3c'); }
-}
+      await setDoc(userDoc, { workouts: S });
+      setBadge('☁️', '#2ecc71');
+    } catch (e) {
+      console.error('[saveData] Erreur Firebase :', e);
+      setBadge('📵', '#e74c3c');
+    }
+  }
 
-function setBadge(t,c){ const b=document.getElementById('sync-badge'); b.textContent=t; b.style.color=c; }
+  function setBadge(t, c) {
+    const b = document.getElementById('sync-badge');
+    b.textContent = t;
+    b.style.color = c;
+  }
 
-window.goTab = (k) => {
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('screen-'+k).classList.add('active');
+  // ─── NAVIGATION ─────────────────────────────────────────────────────────────
+  window.goTab = (k) => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + k).classList.add('active');
     document.querySelector(`.nav-btn[data-tab="${k}"]`).classList.add('active');
-    if(k==='add') window.updateRef();
-};
+    if (k === 'add') window.updateRef();
+  };
 
-window.onTypeChange = () => {
+  window.onTypeChange = () => {
     const type = document.getElementById('add-type').value;
     const sel = document.getElementById('add-exo');
     sel.innerHTML = Object.keys(S[type].exercises).map(e => `<option value="${e}">${e}</option>`).join('');
     window.updateRef();
-};
+  };
 
-window.updateRef = () => {
+  window.updateRef = () => {
     const type = document.getElementById('add-type').value;
-    const exo = document.getElementById('add-exo').value;
-    const h = S[type].exercises[exo] || [];
+    const exo  = document.getElementById('add-exo').value;
+    const h    = S[type].exercises[exo] || [];
     const last = h.filter(s => s && s.length > 0).pop() || [];
-    document.getElementById('ref-last-sets').innerHTML = last.length ? 'Dernière : ' + last.map(s => `${s.reps}@${s.kg}kg`).join(' | ') : 'Aucun historique pour cet exo';
-};
+    document.getElementById('ref-last-sets').innerHTML = last.length
+      ? 'Dernière : ' + last.map(s => `${s.reps}@${s.kg}kg`).join(' | ')
+      : 'Aucun historique pour cet exo';
+  };
 
-window.addSetRow = () => {
+  window.addSetRow = () => {
     const list = document.getElementById('sets-list');
-    const id = 'sr-'+Date.now()+Math.random();
-    const div = document.createElement('div');
-    div.className = 'set-row'; div.id = id;
-    div.innerHTML = `<div class="set-num">${list.children.length+1}</div><input type="number" placeholder="Reps"><input type="number" placeholder="Kg"><button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--red);font-size:1.2rem;">✕</button>`;
+    const id   = 'sr-' + Date.now() + Math.random();
+    const div  = document.createElement('div');
+    div.className = 'set-row';
+    div.id = id;
+    div.innerHTML = `
+      <div class="set-num">${list.children.length + 1}</div>
+      <input type="number" placeholder="Reps">
+      <input type="number" placeholder="Kg">
+      <button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--red);font-size:1.2rem;">✕</button>`;
     list.appendChild(div);
-};
+  };
 
-window.saveSession = () => {
+  window.saveSession = () => {
     const type = document.getElementById('add-type').value;
-    const exo = document.getElementById('add-exo').value;
+    const exo  = document.getElementById('add-exo').value;
     const sets = [];
     document.querySelectorAll('#sets-list .set-row').forEach(row => {
-        const ins = row.querySelectorAll('input');
-        if(ins[0].value) sets.push({ reps: parseInt(ins[0].value), kg: parseFloat(ins[1].value) || 0 });
+      const ins = row.querySelectorAll('input');
+      if (ins[0].value) sets.push({ reps: parseInt(ins[0].value), kg: parseFloat(ins[1].value) || 0 });
     });
-    if(!sets.length) return;
-    if(!S[type].exercises[exo]) S[type].exercises[exo] = [];
+    if (!sets.length) return;
+    if (!S[type].exercises[exo]) S[type].exercises[exo] = [];
     S[type].exercises[exo].push(sets);
     saveData();
     renderAll();
     window.goTab(type);
-};
+  };
 
-window.toggleAcc = (id) => document.getElementById(id).classList.toggle('open');
-let pending = null;
-window.askDelete = (k, e, i) => {
-    pending = {k, e, i};
-    document.getElementById('modal-sub').textContent = `${e} - Séance ${i+1}`;
+  window.toggleAcc = (id) => document.getElementById(id).classList.toggle('open');
+
+  let pending = null;
+
+  window.askDelete = (k, e, i) => {
+    pending = { k, e, i };
+    document.getElementById('modal-sub').textContent = `${e} - Séance ${i + 1}`;
     document.getElementById('modal').classList.add('show');
-};
-window.confirmDelete = () => {
+  };
+
+  window.confirmDelete = () => {
     S[pending.k].exercises[pending.e].splice(pending.i, 1);
     saveData();
     renderAll();
     window.closeModal();
-};
-window.closeModal = () => document.getElementById('modal').classList.remove('show');
+  };
 
-function renderAll() {
-    ['jambes','pecs','dos'].forEach(k => {
-        const el = document.getElementById('screen-'+k);
-        let html = `<div class="screen-title"><div class="dot" style="background:${S[k].color}"></div>${S[k].label}</div>`;
-        for(const [name, seances] of Object.entries(S[k].exercises)) {
-            const valid = seances.filter(s => s && s.length > 0);
-            if(valid.length === 0) continue; // On n'affiche pas les exos vides
-            let acc = valid.map((s, i) => `
-                <div class="acc-item">
-                    <button class="acc-toggle" onclick="toggleAcc('acc-${k}-${name.replace(/\s/g,'')}-${i}')">Séance ${i+1} ▾</button>
-                    <div class="acc-body" id="acc-${k}-${name.replace(/\s/g,'')}-${i}">
-                        ${s.map(set => `<div class="acc-row"><span>${set.reps} reps</span><span class="acc-kg">${set.kg}kg</span></div>`).join('')}
-                        <button class="del-seance-btn" onclick="askDelete('${k}','${name}',${i})">🗑 Supprimer</button>
-                    </div>
-                </div>
-            `).join('');
-            html += `<div class="exo-card"><div style="font-weight:700;margin-bottom:10px;">${name}</div>${acc}</div>`;
-        }
-        el.innerHTML = html;
+  window.closeModal = () => document.getElementById('modal').classList.remove('show');
+
+  // ─── RENDU ──────────────────────────────────────────────────────────────────
+  function renderAll() {
+    ['jambes', 'pecs', 'dos'].forEach(k => {
+      const el = document.getElementById('screen-' + k);
+      let html = `<div class="screen-title"><div class="dot" style="background:${S[k].color}"></div>${S[k].label}</div>`;
+      for (const [name, seances] of Object.entries(S[k].exercises)) {
+        const valid = seances.filter(s => s && s.length > 0);
+        if (valid.length === 0) continue;
+        const safeId = name.replace(/\s/g, '').replace(/[^a-zA-Z0-9]/g, '');
+        let acc = valid.map((s, i) => `
+          <div class="acc-item">
+            <button class="acc-toggle" onclick="toggleAcc('acc-${k}-${safeId}-${i}')">Séance ${i + 1} ▾</button>
+            <div class="acc-body" id="acc-${k}-${safeId}-${i}">
+              ${s.map(set => `<div class="acc-row"><span>${set.reps} reps</span><span class="acc-kg">${set.kg}kg</span></div>`).join('')}
+              <button class="del-seance-btn" onclick="askDelete('${k}','${name}',${i})">🗑 Supprimer</button>
+            </div>
+          </div>`).join('');
+        html += `<div class="exo-card"><div style="font-weight:700;margin-bottom:10px;">${name}</div>${acc}</div>`;
+      }
+      el.innerHTML = html;
     });
     window.onTypeChange();
     document.getElementById('sets-list').innerHTML = '';
-    for(let i=0; i<3; i++) window.addSetRow();
-}
+    for (let i = 0; i < 3; i++) window.addSetRow();
+  }
 
-// --- AUTH ---
-window.loginWithFirebase = () => {
-    const e = document.getElementById('login-email').value, p = document.getElementById('login-pass').value;
-    signInWithEmailAndPassword(auth, e, p).catch(err => alert("Erreur: " + err.message));
-};
-window.registerWithFirebase = () => {
-    const e = document.getElementById('login-email').value, p = document.getElementById('login-pass').value;
-    createUserWithEmailAndPassword(auth, e, p).catch(err => alert("Erreur: " + err.message));
-};
-window.logoutFirebase = () => signOut(auth);
+  // ─── AUTH ────────────────────────────────────────────────────────────────────
+  window.loginWithFirebase = () => {
+    const e = document.getElementById('login-email').value;
+    const p = document.getElementById('login-pass').value;
+    signInWithEmailAndPassword(auth, e, p)
+      .catch(err => alert("Erreur de connexion : " + err.message));
+  };
 
-onAuthStateChanged(auth, u => {
-    if(u) {
-        userDoc = doc(db, "sports_data", u.uid);
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app').style.display = 'flex';
-        loadData();
+  window.registerWithFirebase = () => {
+    const e = document.getElementById('login-email').value;
+    const p = document.getElementById('login-pass').value;
+    createUserWithEmailAndPassword(auth, e, p)
+      .catch(err => alert("Erreur de création : " + err.message));
+  };
+
+  window.logoutFirebase = () => signOut(auth);
+
+  // onAuthStateChanged est le point d'entrée principal.
+  // C'est ici qu'on initialise userDoc — AVANT tout appel à loadData/saveData.
+  onAuthStateChanged(auth, u => {
+    if (u) {
+      userDoc = doc(db, "sports_data", u.uid);
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      loadData();
     } else {
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('app').style.display = 'none';
+      userDoc = null;
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
     }
-});
+  });
 </script>
 </body>
 </html>

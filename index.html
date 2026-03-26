@@ -230,140 +230,146 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 let userDoc = null; 
 
-const DEFAULT={jambes:{label:"Bas du Corps",color:"#f0a500",exercises:{"Squat":[[{reps:10,kg:70},{reps:10,kg:80},{reps:10,kg:85}],[{reps:10,kg:75},{reps:10,kg:90},{reps:10,kg:100}]],"Leg Press":[[{reps:15,kg:52},{reps:15,kg:61},{reps:18,kg:63}],[{reps:15,kg:55},{reps:15,kg:66},{reps:15,kg:66}]],"Leg Curl assis machine":[[{reps:15,kg:41},{reps:15,kg:39},{reps:15,kg:41}],[{reps:15,kg:45},{reps:15,kg:45},{reps:15,kg:47}]],"Mollet":[[{reps:20,kg:4},{reps:20,kg:4},{reps:20,kg:4}],[{reps:20,kg:6},{reps:20,kg:6},{reps:20,kg:6}]]}},pecs:{label:"Pecs / Triceps",color:"#e05c2a",exercises:{"Développé couché haltère":[[{reps:12,kg:26},{reps:15,kg:24},{reps:16,kg:24}],[{reps:10,kg:28},{reps:15,kg:25},{reps:15,kg:24}],[{reps:8,kg:28},{reps:12,kg:26},{reps:12,kg:24}]],"Développé couché barre":[[{reps:10,kg:42},{reps:10,kg:42},{reps:10,kg:42}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:52.5}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:50}]],"Dips incliné PECS":[[{reps:15,kg:4.5},{reps:15,kg:4.5},{reps:15,kg:4.5}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}]],"Élévation latérale avant":[[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:14},{reps:20,kg:16},{reps:20,kg:16}],[{reps:20,kg:16},{reps:20,kg:18},{reps:20,kg:18}]],"Élévation latérale côté":[[{reps:15,kg:14},{reps:15,kg:12},{reps:15,kg:14}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:20,kg:16},{reps:20,kg:16}]],"Triceps poulie haute":[[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:13.6}]],"Triceps poulie basse":[[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}],[{reps:15,kg:11},{reps:20,kg:9},{reps:20,kg:9}],[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}]]}},dos:{label:"Dos / Biceps",color:"#3ab5e6",exercises:{"Traction":[[{reps:10,kg:0},{reps:15,kg:4.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:17,kg:6.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:15,kg:4.5},{reps:13,kg:4.5}]],"Tirage vertical prise large":[[{reps:15,kg:52},{reps:16,kg:52},{reps:17,kg:52}],[{reps:18,kg:52},{reps:17,kg:52},{reps:15,kg:47}],[{reps:15,kg:52},{reps:15,kg:52},{reps:16,kg:47}]],"Rowing à la barre":[[{reps:15,kg:40},{reps:15,kg:40},{reps:17,kg:40}],[{reps:20,kg:40},{reps:15,kg:45},{reps:17,kg:42.5}],[{reps:15,kg:40},{reps:19,kg:45},{reps:20,kg:45}]],"Australienne":[[{reps:15,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:20,kg:0},{reps:20,kg:0}]],"Élévation latérale arrière":[[{reps:20,kg:12},{reps:20,kg:12},{reps:20,kg:12}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:15,kg:18},{reps:20,kg:18}]],"Curl":[[{reps:15,kg:14},{reps:15,kg:16},{reps:15,kg:16}],[{reps:15,kg:16},{reps:15,kg:14},{reps:15,kg:14}],[{reps:15,kg:18},{reps:13,kg:18},{reps:12,kg:18}]],"Curl biceps barre EZ":[[{reps:15,kg:25},{reps:15,kg:25},{reps:20,kg:25}],[{reps:15,kg:25},{reps:15,kg:25},{reps:15,kg:22.5}],[{reps:15,kg:25},{reps:15,kg:20},{reps:15,kg:20}]]}}};
+const DEFAULT={jambes:{label:"Bas du Corps",color:"#f0a500",exercises:{"Squat":[[{reps:10,kg:70},{reps:10,kg:80},{reps:10,kg:85}],[{reps:10,kg:75},{reps:10,kg:90},{reps:10,kg:100}]],"Leg Press":[[{reps:15,kg:52},{reps:15,kg:61},{reps:18,kg:63}],[{reps:15,kg:55},{reps:15,kg:66},{reps:15,kg:66}]],"Leg Curl assis machine":[[{reps:15,kg:41},{reps:15,kg:39},{reps:15,kg:41}],[{reps:15,kg:45},{reps:15,kg:45},{reps:15,kg:47}]],"Mollet":[[{reps:20,kg:4},{reps:20,kg:4},{reps:20,kg:4}],[{reps:20,kg:6},{reps:20,kg:6},{reps:20,kg:6}]]}},pecs:{label:"Pecs / Triceps",color:"#e05c2a",exercises:{"Développé couché haltère":[[{reps:12,kg:26},{reps:15,kg:24},{reps:16,kg:24}],[{reps:10,kg:28},{reps:15,kg:25},{reps:15,kg:24}],[{reps:8,kg:28},{reps:12,kg:26},{reps:12,kg:24}]],"Développé couché barre":[[{reps:10,kg:42},{reps:10,kg:42},{reps:10,kg:42}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:52.5}],[{reps:10,kg:45},{reps:10,kg:50},{reps:10,kg:50}]],"Dips incliné PECS":[[{reps:15,kg:4.5},{reps:15,kg:4.5},{reps:15,kg:4.5}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}],[{reps:15,kg:0},{reps:15,kg:0},{reps:15,kg:0}]],"Élévation latérale avant":[[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:14},{reps:20,kg:16},{reps:20,kg:16}],[{reps:20,kg:16},{reps:20,kg:18},{reps:20,kg:18}]],"Élévation latérale côté":[[{reps:15,kg:14},{reps:15,kg:12},{reps:15,kg:14}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:20,kg:16},{reps:20,kg:16}]],"Triceps poulie haute":[[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:15,kg:11}],[{reps:15,kg:11},{reps:15,kg:11},{reps:13.6,kg:13.6}]],"Triceps poulie basse":[[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}],[{reps:15,kg:11},{reps:20,kg:9},{reps:20,kg:9}],[{reps:15,kg:9},{reps:17,kg:9},{reps:20,kg:9}]]}},dos:{label:"Dos / Biceps",color:"#3ab5e6",exercises:{"Traction":[[{reps:10,kg:0},{reps:15,kg:4.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:17,kg:6.5},{reps:15,kg:6.5}],[{reps:11,kg:0},{reps:15,kg:4.5},{reps:13,kg:4.5}]],"Tirage vertical prise large":[[{reps:15,kg:52},{reps:16,kg:52},{reps:17,kg:52}],[{reps:18,kg:52},{reps:17,kg:52},{reps:15,kg:47}],[{reps:15,kg:52},{reps:15,kg:52},{reps:16,kg:47}]],"Rowing à la barre":[[{reps:15,kg:40},{reps:15,kg:40},{reps:17,kg:40}],[{reps:20,kg:40},{reps:15,kg:45},{reps:17,kg:42.5}],[{reps:15,kg:40},{reps:19,kg:45},{reps:20,kg:45}]],"Australienne":[[{reps:15,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:15,kg:0},{reps:20,kg:0}],[{reps:20,kg:0},{reps:20,kg:0},{reps:20,kg:0}]],"Élévation latérale arrière":[[{reps:20,kg:12},{reps:20,kg:12},{reps:20,kg:12}],[{reps:20,kg:14},{reps:20,kg:14},{reps:20,kg:14}],[{reps:20,kg:16},{reps:15,kg:18},{reps:20,kg:18}]],"Curl":[[{reps:15,kg:14},{reps:15,kg:16},{reps:15,kg:16}],[{reps:15,kg:16},{reps:15,kg:14},{reps:15,kg:14}],[{reps:15,kg:18},{reps:13,kg:18},{reps:12,kg:18}]],"Curl biceps barre EZ":[[{reps:15,kg:25},{reps:15,kg:25},{reps:20,kg:25}],[{reps:15,kg:25},{reps:15,kg:25},{reps:15,kg:22.5}],[{reps:15,kg:25},{reps:15,kg:20},{reps:15,kg:20}]]}}};
 
-let S=JSON.parse(JSON.stringify(DEFAULT));
-const charts={};
+let S = JSON.parse(JSON.stringify(DEFAULT));
+const charts = {};
 
-async function loadData(){
-    if(!userDoc) return;
-    setBadge('⏳','#f0a500');
+// 1. CHARGEMENT
+async function loadData() {
+    if (!userDoc) return;
+    setBadge('⏳', '#f0a500');
     try {
         const docSnap = await getDoc(userDoc);
         if (docSnap.exists() && docSnap.data().workouts) {
             S = docSnap.data().workouts;
+            console.log("Données récupérées de Firebase");
         } else {
+            console.log("Premier utilisateur : création du doc...");
             await setDoc(userDoc, { workouts: S });
         }
-        renderAll();
-        setBadge('☁️','#2ecc71');
-    } catch(e) {
-        console.error(e);
-        try{const r=localStorage.getItem('ms_data');if(r)S=JSON.parse(r);}catch(e2){}
-        setBadge('📵','#e74c3c');
+        setBadge('☁️', '#2ecc71');
+    } catch (e) {
+        console.error("Erreur Firebase:", e);
+        setBadge('📵', '#e74c3c');
+        // Secours LocalStorage si Firebase échoue
+        try { const r = localStorage.getItem('ms_data'); if (r) S = JSON.parse(r); } catch (e2) {}
     }
+    renderAll(); // On dessine QUOI QU'IL ARRIVE
 }
 
-async function saveData(){
-    if(!userDoc) return;
-    try{localStorage.setItem('ms_data',JSON.stringify(S));}catch(e){}
-    setBadge('⏳','#f0a500');
+// 2. SAUVEGARDE
+async function saveData() {
+    if (!userDoc) return;
+    try { localStorage.setItem('ms_data', JSON.stringify(S)); } catch (e) {}
+    setBadge('⏳', '#f0a500');
     try {
         await setDoc(userDoc, { workouts: S });
-        setBadge('☁️','#2ecc71');
-    } catch(e) {
-        setBadge('📵','#e74c3c');
+        setBadge('☁️', '#2ecc71');
+    } catch (e) {
+        console.error("Erreur sauvegarde:", e);
+        setBadge('📵', '#e74c3c');
     }
 }
 
-function setBadge(i,c){const b=document.getElementById('sync-badge');if(b){b.textContent=i;b.style.color=c;}}
+// --- LES FONCTIONS GLOBALES (indispensables car module) ---
+window.setBadge = (i, c) => { const b = document.getElementById('sync-badge'); if (b) { b.textContent = i; b.style.color = c; } };
 
-function renderAll(){
+window.renderAll = () => {
     buildScreen('jambes');
     buildScreen('pecs');
     buildScreen('dos');
     onTypeChange();
     initSetRows();
-}
-
-function maxKg(s){const v=s.filter(x=>x.reps!==null&&x.kg!==null&&x.kg!==undefined);return v.length?Math.max(...v.map(x=>x.kg)):0;}
-function fmtKg(k){return(!k&&k!==0)||k===null?'PC':k===0?'PC':k+'kg';}
-
-function buildScreen(key){
-    const sess=S[key],el=document.getElementById('screen-'+key);
-    if(!el) return;
-    let html=`<div class="screen-title"><div class="dot" style="background:${sess.color}"></div>${sess.label}</div>`;
-    for(const[exoName,seances]of Object.entries(sess.exercises)){
-        const mv=seances.map(s=>maxKg(s)),lm=mv[mv.length-1],pm=mv.length>1?mv[mv.length-2]:null,diff=pm!==null?lm-pm:0;
-        const trend=diff>0?`<span class="badge-up">↑ +${diff}kg</span>`:`<span class="badge-same">— stable</span>`;
-        const cid=`c-${key}-${exoName.replace(/\W/g,'_')}`,aid=`a-${key}-${exoName.replace(/\W/g,'_')}`;
-        let acc='';
-        seances.forEach((sets,i)=>{
-            const rows=sets.filter(s=>s.reps!==null).map((s,j)=>`<div class="acc-row"><span class="acc-s">S${j+1}</span><span>${s.reps} reps</span><span class="acc-kg">${fmtKg(s.kg)}</span></div>`).join('');
-            const se=exoName.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-            acc+=`<div class="acc-item"><button class="acc-toggle" onclick="toggleAcc('${aid}-${i}')"><span>Séance ${i+1}</span><span class="acc-meta">max ${fmtKg(maxKg(sets))}</span><span class="acc-arrow" id="arr-${aid}-${i}">▾</span></button><div class="acc-body" id="${aid}-${i}">${rows}<button class="del-seance-btn" onclick="askDelete('${key}','${se}',${i})">🗑 Supprimer cette séance</button></div></div>`;
-        });
-        html+=`<div class="exo-card"><div class="exo-name">${exoName}</div><div class="pills"><div class="pill">Record : <strong>${fmtKg(lm)}</strong></div><div class="pill">${trend}</div><div class="pill">${seances.length} séance${seances.length>1?'s':''}</div></div><div class="chart-wrap"><canvas id="${cid}"></canvas></div><div class="accordion">${acc}</div></div>`;
-    }
-    el.innerHTML=html;
-    for(const[exoName,seances]of Object.entries(sess.exercises)){
-        const cid=`c-${key}-${exoName.replace(/\W/g,'_')}`,canvas=document.getElementById(cid);
-        if(!canvas)continue;if(charts[cid])charts[cid].destroy();
-        charts[cid]=new Chart(canvas.getContext('2d'),{type:'line',data:{labels:seances.map((_,i)=>`S${i+1}`),datasets:[{label:'Max kg',data:seances.map(s=>maxKg(s)),borderColor:sess.color,backgroundColor:sess.color+'22',fill:true,tension:0.4,pointBackgroundColor:sess.color,pointRadius:5,pointHoverRadius:7,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7590',font:{size:10}},grid:{color:'#2a3040'}},y:{ticks:{color:'#6b7590',font:{size:10}},grid:{color:'#2a3040'},beginAtZero:false}}}});
-    }
-}
-
-// NAVIGATION ET ACTIONS
-window.goTab = function(key){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('screen-'+key).classList.add('active');
-    document.querySelector(`.nav-btn[data-tab="${key}"]`).classList.add('active');
-    document.getElementById('topbar-sub').textContent=key.charAt(0).toUpperCase()+key.slice(1);
-    if(key==='add') updateRef();
 };
 
-window.toggleAcc = (id) => {document.getElementById(id)?.classList.toggle('open'); document.getElementById('arr-'+id)?.classList.toggle('open');};
+function maxKg(s) { const v = s.filter(x => x.reps !== null && x.kg !== null); return v.length ? Math.max(...v.map(x => x.kg)) : 0; }
+function fmtKg(k) { return (!k && k !== 0) || k === null ? 'PC' : k + 'kg'; }
+
+window.buildScreen = (key) => {
+    const sess = S[key], el = document.getElementById('screen-' + key);
+    if (!el) return;
+    let html = `<div class="screen-title"><div class="dot" style="background:${sess.color}"></div>${sess.label}</div>`;
+    for (const [exoName, seances] of Object.entries(sess.exercises)) {
+        const mv = seances.map(s => maxKg(s)), lm = mv[mv.length - 1], pm = mv.length > 1 ? mv[mv.length - 2] : null, diff = pm !== null ? lm - pm : 0;
+        const trend = diff > 0 ? `<span class="badge-up">↑ +${diff}kg</span>` : `<span class="badge-same">— stable</span>`;
+        const cid = `c-${key}-${exoName.replace(/\W/g, '_')}`, aid = `a-${key}-${exoName.replace(/\W/g, '_')}`;
+        let acc = '';
+        seances.forEach((sets, i) => {
+            const rows = sets.filter(s => s.reps !== null).map((s, j) => `<div class="acc-row"><span class="acc-s">S${j+1}</span><span>${s.reps} reps</span><span class="acc-kg">${fmtKg(s.kg)}</span></div>`).join('');
+            const se = exoName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            acc += `<div class="acc-item"><button class="acc-toggle" onclick="toggleAcc('${aid}-${i}')"><span>Séance ${i + 1}</span><span class="acc-meta">max ${fmtKg(maxKg(sets))}</span><span class="acc-arrow" id="arr-${aid}-${i}">▾</span></button><div class="acc-body" id="${aid}-${i}">${rows}<button class="del-seance-btn" onclick="askDelete('${key}','${se}',${i})">🗑 Supprimer cette séance</button></div></div>`;
+        });
+        html += `<div class="exo-card"><div class="exo-name">${exoName}</div><div class="pills"><div class="pill">Record : <strong>${fmtKg(lm)}</strong></div><div class="pill">${trend}</div><div class="pill">${seances.length} séance${seances.length > 1 ? 's' : ''}</div></div><div class="chart-wrap"><canvas id="${cid}"></canvas></div><div class="accordion">${acc}</div></div>`;
+    }
+    el.innerHTML = html;
+    for (const [exoName, seances] of Object.entries(sess.exercises)) {
+        const cid = `c-${key}-${exoName.replace(/\W/g, '_')}`, canvas = document.getElementById(cid);
+        if (!canvas) continue; if (charts[cid]) charts[cid].destroy();
+        charts[cid] = new Chart(canvas.getContext('2d'), { type: 'line', data: { labels: seances.map((_, i) => `S${i + 1}`), datasets: [{ label: 'Max kg', data: seances.map(s => maxKg(s)), borderColor: sess.color, backgroundColor: sess.color + '22', fill: true, tension: 0.4, pointBackgroundColor: sess.color, pointRadius: 5, borderWidth: 2.5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } }, y: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } } } } });
+    }
+};
+
+window.goTab = (key) => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen-' + key).classList.add('active');
+    document.querySelector(`.nav-btn[data-tab="${key}"]`).classList.add('active');
+    document.getElementById('topbar-sub').textContent = key.charAt(0).toUpperCase() + key.slice(1);
+    if (key === 'add') updateRef();
+};
+
+window.toggleAcc = (id) => { document.getElementById(id)?.classList.toggle('open'); document.getElementById('arr-' + id)?.classList.toggle('open'); };
+
 window.onTypeChange = () => {
-    const type=document.getElementById('add-type').value,sel=document.getElementById('add-exo');
-    sel.innerHTML='';
-    Object.keys(S[type].exercises).forEach(n=>{sel.innerHTML+=`<option value="${n}">${n}</option>`;});
+    const type = document.getElementById('add-type').value, sel = document.getElementById('add-exo');
+    if(!sel) return; sel.innerHTML = '';
+    Object.keys(S[type].exercises).forEach(n => { sel.innerHTML += `<option value="${n}">${n}</option>`; });
     updateRef();
 };
 
 window.updateRef = () => {
-    const type=document.getElementById('add-type').value,exo=document.getElementById('add-exo').value;
-    if(!exo||!S[type]?.exercises[exo])return;
-    const seances=S[type].exercises[exo],color=S[type].color;
-    let rec=0; seances.forEach(s=>s.forEach(set=>{if(set.kg&&set.kg>rec)rec=set.kg;}));
-    const re=document.getElementById('ref-record');
-    re.textContent=rec>0?rec+'kg':'PC'; re.style.color=color;
-    document.getElementById('ref-count').textContent=seances.length;
-    const last=seances[seances.length-1];
-    document.getElementById('ref-last-sets').innerHTML=last.filter(s=>s.reps!==null).map((s,i)=>`<div class="ref-set-row"><span class="rs-num">S${i+1}</span><span>${s.reps} reps</span><span class="rs-kg">${fmtKg(s.kg)}</span></div>`).join('');
+    const type = document.getElementById('add-type').value, exo = document.getElementById('add-exo').value;
+    if (!exo || !S[type]?.exercises[exo]) return;
+    const seances = S[type].exercises[exo], color = S[type].color;
+    let rec = 0; seances.forEach(s => s.forEach(set => { if (set.kg && set.kg > rec) rec = set.kg; }));
+    const re = document.getElementById('ref-record');
+    re.textContent = rec > 0 ? rec + 'kg' : 'PC'; re.style.color = color;
+    document.getElementById('ref-count').textContent = seances.length;
+    const last = seances[seances.length - 1];
+    document.getElementById('ref-last-sets').innerHTML = last.filter(s => s.reps !== null).map((s, i) => `<div class="ref-set-row"><span class="rs-num">S${i + 1}</span><span>${s.reps} reps</span><span class="rs-kg">${fmtKg(s.kg)}</span></div>`).join('');
 };
 
-let sc=0;
+let sc = 0;
 window.addSetRow = () => {
-    sc++; const list=document.getElementById('sets-list'),id='sr-'+sc,num=list.children.length+1,div=document.createElement('div');
-    div.className='set-row'; div.id=id;
-    div.innerHTML=`<div class="set-num">${num}</div><input type="number" inputmode="decimal" placeholder="Reps"><input type="number" inputmode="decimal" placeholder="Kg"><button class="btn-del-set" onclick="delSetRow('${id}')">✕</button>`;
+    sc++; const list = document.getElementById('sets-list'), id = 'sr-' + sc, num = list.children.length + 1, div = document.createElement('div');
+    div.className = 'set-row'; div.id = id;
+    div.innerHTML = `<div class="set-num">${num}</div><input type="number" inputmode="decimal" placeholder="Reps"><input type="number" inputmode="decimal" placeholder="Kg"><button class="btn-del-set" onclick="delSetRow('${id}')">✕</button>`;
     list.appendChild(div);
 };
-window.delSetRow = (id) => {document.getElementById(id)?.remove(); document.querySelectorAll('#sets-list .set-row').forEach((r,i)=>r.querySelector('.set-num').textContent=i+1);};
-function initSetRows(){document.getElementById('sets-list').innerHTML='';sc=0;for(let i=0;i<3;i++)window.addSetRow();}
+window.delSetRow = (id) => { document.getElementById(id)?.remove(); document.querySelectorAll('#sets-list .set-row').forEach((r, i) => r.querySelector('.set-num').textContent = i + 1); };
+window.initSetRows = () => { document.getElementById('sets-list').innerHTML = ''; sc = 0; for (let i = 0; i < 3; i++) window.addSetRow(); };
 
 window.saveSession = async () => {
-    const type=document.getElementById('add-type').value,exo=document.getElementById('add-exo').value,sets=[];
-    document.querySelectorAll('#sets-list .set-row').forEach(row=>{
-        const ins=row.querySelectorAll('input'),reps=parseInt(ins[0].value),kg=parseFloat(ins[1].value);
-        if(!isNaN(reps))sets.push({reps,kg:isNaN(kg)?null:kg});
+    const type = document.getElementById('add-type').value, exo = document.getElementById('add-exo').value, sets = [];
+    document.querySelectorAll('#sets-list .set-row').forEach(row => {
+        const ins = row.querySelectorAll('input'), reps = parseInt(ins[0].value), kg = parseFloat(ins[1].value);
+        if (!isNaN(reps)) sets.push({ reps, kg: isNaN(kg) ? null : kg });
     });
-    if(!sets.length)return;
+    if (!sets.length) return;
     S[type].exercises[exo].push(sets);
     await saveData();
     renderAll();
     window.goTab(type);
 };
 
-// AUTHENTICATION
 window.loginWithFirebase = async () => {
-    const email=document.getElementById('login-email').value,pass=document.getElementById('login-pass').value;
-    try { await signInWithEmailAndPassword(auth, email, pass); } catch(e) { alert("Erreur: " + e.message); }
+    const email = document.getElementById('login-email').value, pass = document.getElementById('login-pass').value;
+    try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert("Erreur: " + e.message); }
 };
 window.registerWithFirebase = async () => {
-    const email=document.getElementById('login-email').value,pass=document.getElementById('login-pass').value;
-    try { await createUserWithEmailAndPassword(auth, email, pass); } catch(e) { alert("Erreur: " + e.message); }
+    const email = document.getElementById('login-email').value, pass = document.getElementById('login-pass').value;
+    try { await createUserWithEmailAndPassword(auth, email, pass); } catch (e) { alert("Erreur: " + e.message); }
 };
 window.logoutFirebase = () => signOut(auth);
 

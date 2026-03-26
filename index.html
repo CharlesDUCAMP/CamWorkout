@@ -61,6 +61,7 @@ input,select{background:var(--card);border:1px solid var(--border);border-radius
   <div class="form-group"><input type="password" id="login-pass" placeholder="Mot de passe"></div>
   <button class="btn-save" onclick="loginWithFirebase()">SE CONNECTER</button>
   <button onclick="registerWithFirebase()" style="background:none;border:none;color:var(--muted);margin-top:20px;text-decoration:underline;">Créer un compte</button>
+  <button onclick="resetPassword()" style="background:none;border:none;color:var(--muted);margin-top:10px;text-decoration:underline;font-size:0.85rem;">Mot de passe oublié ?</button>
 </div>
 
 <div id="app" style="display:none;">
@@ -115,7 +116,7 @@ input,select{background:var(--card);border:1px solid var(--border);border-radius
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCcwQPwp4nzVQg7mjcZeA8as80FlyEELP4",
@@ -156,22 +157,33 @@ const chartInstances = {};
 
 // ─── UTILITAIRES ─────────────────────────────────────────────────────────────
 
-function setBestVolume(set) {
-  return set.reps * (set.kg || 0);
+// Max kg soulevé dans une séance (le set le plus lourd)
+function sessionMaxKg(seance) {
+  return Math.max(0, ...(seance.sets || []).map(s => s.kg || 0));
 }
 
+// Record absolu toutes séances confondues
+function getRecord(seances) {
+  return Math.max(0, ...seances.map(s => sessionMaxKg(s)));
+}
+
+// Progression : différence entre le max de la 1ère séance et le max de la dernière
+function getProgression(seances) {
+  if (seances.length < 2) return null;
+  const first = sessionMaxKg(seances[0]);
+  const last  = sessionMaxKg(seances[seances.length - 1]);
+  return last - first;
+}
+
+// Previous best = set le plus lourd toutes séances confondues
 function getPreviousBest(seances) {
   let best = null;
   for (const seance of seances) {
     for (const set of (seance.sets || [])) {
-      if (!best || setBestVolume(set) > setBestVolume(best)) best = set;
+      if (!best || (set.kg || 0) > (best.kg || 0)) best = set;
     }
   }
   return best;
-}
-
-function sessionVolume(seance) {
-  return (seance.sets || []).reduce((acc, s) => acc + s.reps * (s.kg || 0), 0);
 }
 
 // ─── FUSION PROFONDE ──────────────────────────────────────────────────────────
@@ -261,7 +273,7 @@ window.updateRef = () => {
   if (last.length)
     html += '<div style="margin-bottom:6px;">🕐 <b>Dernière :</b> ' + last.map(s => `${s.reps}@${s.kg}kg`).join(' | ') + '</div>';
   if (best)
-    html += '<div>🏆 <b>Previous best :</b> ' + `${best.reps} reps @ ${best.kg} kg` + ' <span style="color:var(--muted);font-size:0.75rem;">(vol. ' + setBestVolume(best) + ')</span></div>';
+    html += '<div>🏆 <b>Previous best :</b> ' + `${best.reps} reps @ ${best.kg} kg` + '</div>';
   if (!html) html = 'Aucun historique pour cet exercice';
   document.getElementById('ref-last-sets').innerHTML = html;
 };
@@ -323,7 +335,7 @@ function renderChart(canvasId, seances, color) {
     data: {
       labels: seances.map((_, i) => `S${i + 1}`),
       datasets: [{
-        data: seances.map(s => sessionVolume(s)),
+        data: seances.map(s => sessionMaxKg(s)),
         borderColor: color,
         backgroundColor: color + '22',
         borderWidth: 2,
@@ -355,14 +367,20 @@ function renderAll() {
     for (const [name, seances] of Object.entries(S[k].exercises)) {
       const valid  = seances.filter(s => s.sets?.length > 0);
       if (!valid.length) continue;
-      const best   = getPreviousBest(valid);
+      const record     = getRecord(valid);
+      const progression = getProgression(valid);
       const safeId = name.replace(/[^a-zA-Z0-9]/g, '');
       const chartId = `chart-${k}-${safeId}`;
-      const bestBadge = best ? `<span class="pb-badge">🏆 ${best.reps}×${best.kg}kg</span>` : '';
+
+      const progBadge = progression !== null
+        ? `<span style="display:inline-block;background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);color:#2ecc71;border-radius:6px;font-size:0.72rem;font-weight:700;padding:2px 8px;margin-left:4px;vertical-align:middle;">${progression >= 0 ? '↑ +' : '↓ '}${progression}kg</span>`
+        : '';
+      const recordBadge = `<span style="display:inline-block;background:rgba(240,165,0,0.15);border:1px solid rgba(240,165,0,0.4);color:var(--a1);border-radius:6px;font-size:0.72rem;font-weight:700;padding:2px 8px;margin-left:4px;vertical-align:middle;">Record : ${record}kg</span>`;
+      const countBadge  = `<span style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);border-radius:6px;font-size:0.72rem;font-weight:600;padding:2px 8px;margin-left:4px;vertical-align:middle;">${valid.length} séance${valid.length > 1 ? 's' : ''}</span>`;
       const accItems = valid.map((s, i) => `
         <div class="acc-item">
           <button class="acc-toggle" onclick="toggleAcc('acc-${k}-${safeId}-${i}')">
-            Séance ${i + 1} <span style="color:var(--muted);font-size:0.75rem;margin-left:6px;">vol. ${sessionVolume(s)}</span> ▾
+            Séance ${i + 1} <span style="color:var(--muted);font-size:0.75rem;margin-left:6px;">max ${sessionMaxKg(s)}kg</span> ▾
           </button>
           <div class="acc-body" id="acc-${k}-${safeId}-${i}">
             ${s.sets.map(set => `<div class="acc-row"><span>${set.reps} reps</span><span class="acc-kg">${set.kg}kg</span></div>`).join('')}
@@ -370,12 +388,13 @@ function renderAll() {
           </div>
         </div>`).join('');
       const chartHtml = valid.length >= 2
-        ? `<div style="margin-top:10px;font-size:0.75rem;color:var(--muted);">📈 Progression (volume total)</div>
+        ? `<div style="margin-top:10px;font-size:0.75rem;color:var(--muted);">📈 Progression (max kg)</div>
            <div class="chart-wrap"><canvas id="${chartId}"></canvas></div>`
         : '';
       html += `
         <div class="exo-card">
-          <div style="font-weight:700;margin-bottom:6px;">${name} ${bestBadge}</div>
+          <div style="font-weight:700;margin-bottom:8px;">${name}</div>
+          <div style="margin-bottom:10px;">${recordBadge}${progBadge}${countBadge}</div>
           ${accItems}
           ${chartHtml}
         </div>`;
@@ -405,6 +424,13 @@ window.registerWithFirebase = () => {
   const e = document.getElementById('login-email').value;
   const p = document.getElementById('login-pass').value;
   createUserWithEmailAndPassword(auth, e, p).catch(err => alert('Erreur : ' + err.message));
+};
+window.resetPassword = () => {
+  const e = document.getElementById('login-email').value;
+  if (!e) return alert('Entre ton email d\'abord.');
+  sendPasswordResetEmail(auth, e)
+    .then(() => alert('Email de réinitialisation envoyé ! Vérifie ta boîte mail.'))
+    .catch(err => alert('Erreur : ' + err.message));
 };
 window.logoutFirebase = () => signOut(auth);
 

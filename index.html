@@ -334,24 +334,47 @@ function renderChart(canvasId, seances, color) {
     type: 'line',
     data: {
       labels: seances.map((_, i) => `S${i + 1}`),
-      datasets: [{
-        data: seances.map(s => sessionMaxKg(s)),
-        borderColor: color,
-        backgroundColor: color + '22',
-        borderWidth: 2,
-        pointBackgroundColor: color,
-        pointRadius: 4,
-        fill: true,
-        tension: 0.3
-      }]
+      datasets: [
+        {
+          label: 'Max kg',
+          data: seances.map(s => sessionMaxKg(s)),
+          borderColor: color,
+          backgroundColor: color + '22',
+          borderWidth: 2,
+          pointBackgroundColor: color,
+          pointRadius: 4,
+          fill: true,
+          tension: 0.3,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Volume (reps×kg)',
+          data: seances.map(s => (s.sets || []).reduce((acc, set) => acc + set.reps * (set.kg || 0), 0)),
+          borderColor: '#aaaaaa',
+          backgroundColor: 'rgba(170,170,170,0.05)',
+          borderWidth: 2,
+          borderDash: [5, 4],
+          pointBackgroundColor: '#aaaaaa',
+          pointRadius: 3,
+          fill: false,
+          tension: 0.3,
+          yAxisID: 'y2'
+        }
+      ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#6b7590', font: { size: 10 }, boxWidth: 12 }
+        }
+      },
       scales: {
-        x: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } },
-        y: { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } }
+        x:  { ticks: { color: '#6b7590', font: { size: 10 } }, grid: { color: '#2a3040' } },
+        y:  { position: 'left',  ticks: { color: color,     font: { size: 10 } }, grid: { color: '#2a3040' } },
+        y2: { position: 'right', ticks: { color: '#aaaaaa', font: { size: 10 } }, grid: { drawOnChartArea: false } }
       }
     }
   });
